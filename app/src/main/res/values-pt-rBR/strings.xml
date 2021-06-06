@@ -2,4 +2,5 @@
 <resources>
     <string name="title">Contatos</string>
     <string name="error">Ocorreu um erro. Tente novamente.</string>
+    <string name="failed_get_data">Erro ao obter dados.</string>
 </resources>

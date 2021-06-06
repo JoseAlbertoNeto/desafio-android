@@ -9,10 +9,9 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/picture"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/view_margin_start"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -25,8 +24,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
+        android:textSize="@dimen/username_size"
         android:textColor="@color/colorUserName"
         app:layout_constraintBottom_toTopOf="@+id/name"
         app:layout_constraintStart_toEndOf="@+id/picture"
@@ -39,25 +38,9 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:textColor="@color/colorName"
+        android:textSize="@dimen/name_size"
         app:layout_constraintBottom_toBottomOf="@+id/picture"
         app:layout_constraintStart_toStartOf="@+id/username"
         app:layout_constraintTop_toBottomOf="@+id/username"
         tools:text="Name Surname" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/picture"
-        app:layout_constraintEnd_toEndOf="@+id/picture"
-        app:layout_constraintStart_toStartOf="@+id/picture"
-        app:layout_constraintTop_toTopOf="@+id/picture" />
 </androidx.constraintlayout.widget.ConstraintLayout>

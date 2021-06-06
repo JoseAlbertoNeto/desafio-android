@@ -2,4 +2,5 @@
 <resources>
     <string name="title">Contactos</string>
     <string name="error">Ocurrio un error. Inténtalo de nuevo.</string>
+    <string name="failed_get_data">No se pudieron obtener los datos.</string>
 </resources>

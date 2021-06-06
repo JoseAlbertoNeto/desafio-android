@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- activity text -->
+    <dimen name="title">20sp</dimen>
+    <dimen name="username_size">12sp</dimen>
+    <dimen name="name_size">12sp</dimen>
+
+    <!-- circle image view -->
+    <dimen name="view_margin_start">16dp</dimen>
+</resources>
