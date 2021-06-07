@@ -1,20 +1,21 @@
 package com.picpay.desafio.android.repository
 
-import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.google.gson.GsonBuilder
 import com.picpay.desafio.android.api.PicPayServiceInterface
 import com.picpay.desafio.android.api.Result
-import com.picpay.desafio.android.R
 import com.picpay.desafio.android.viewmodel.User
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.net.UnknownHostException
+
+class FailedToGetDataException(override val message: String): Exception(message)
+class NoInternetConnectionException(override val message: String): Exception(message)
 
 object PicPayServiceImpl {
     private const val URL = "https://609a908e0f5a13001721b74e.mockapi.io/picpay/api/"
-    private val resources = Resources.getSystem()
     private val service: PicPayServiceInterface by lazy {
         Retrofit.Builder()
             .baseUrl(URL)
@@ -24,15 +25,17 @@ object PicPayServiceImpl {
             .create(PicPayServiceInterface::class.java)
     }
 
-    fun getUsers(): LiveData<Result<List<User>?>>{
+    fun getUsers(): LiveData<Result<List<User>?>> {
         return liveData{
             try{
                 val response = service.getUsers()
                 if(response.isSuccessful){
                     emit(Result.Success(value = response.body()))
                 } else {
-                    emit(Result.Error(exception = Exception(resources.getString(R.string.failed_get_data))))
+                    emit(Result.Error(exception = FailedToGetDataException("Failed to get data")))
                 }
+            } catch (exception: UnknownHostException){
+                emit(Result.Error(exception = NoInternetConnectionException("No internet connection")))
             } catch (exception: Exception){
                 emit(Result.Error(exception = exception))
             }

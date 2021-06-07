@@ -3,4 +3,6 @@
     <string name="title">Contactos</string>
     <string name="error">Ocurrio un error. Inténtalo de nuevo.</string>
     <string name="failed_get_data">No se pudieron obtener los datos.</string>
+    <string name="no_internet">No hay conexión a Internet.</string>
+    <string name="retry">Inténtalo de nuevo</string>
 </resources>

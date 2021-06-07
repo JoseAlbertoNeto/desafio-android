@@ -2,5 +2,7 @@
     <string name="app_name" translatable="false">PicPay</string>
     <string name="error">An error occurred. Please try again.</string>
     <string name="failed_get_data">Failed to get data.</string>
+    <string name="no_internet">No internet connection.</string>
+    <string name="retry">Try again</string>
     <string name="title">Contacts</string>
 </resources>
