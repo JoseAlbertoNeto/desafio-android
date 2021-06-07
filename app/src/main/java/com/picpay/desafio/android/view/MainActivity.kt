@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-        setupData()
+        setupContactList()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         }
     }
 
-    private fun setupData(){
+    private fun setupContactList(){
         binding.progressBar.visibility = View.VISIBLE
         userViewModel.users.observe(this, {result ->
             when(result){
@@ -57,9 +57,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                     val adapter = UserListAdapter()
                     adapter.users = result.value!!
                     binding.recyclerView.adapter = adapter
-                    Snackbar.make(findViewById(R.id.recyclerView), getString(R.string.contacts_updated), Snackbar.LENGTH_LONG)
-                        .setTextColor(getColor(R.color.colorAccent))
-                        .show()
+                    showSnackBar(getString(R.string.contacts_updated), R.color.colorAccent)
                 }
                 is Result.Error -> {
                     binding.progressBar.visibility = View.GONE
@@ -70,16 +68,24 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                         else -> getString(R.string.error)
                     }
 
-                    Snackbar.make(findViewById(R.id.recyclerView), message, Snackbar.LENGTH_LONG)
-                        .setTextColor(getColor(R.color.design_default_color_error))
-                        .show()
+                    showSnackBar(message, R.color.colorError)
                 }
             }
         })
     }
 
+    private fun showSnackBar(message:String, colorId: Int){
+        if(userViewModel.needShowSnackBar.value == true) {
+            userViewModel.needShowSnackBar.value = false
+            Snackbar.make(binding.recyclerView, message, Snackbar.LENGTH_LONG)
+                .setTextColor(getColor(colorId))
+                .setBackgroundTint(getColor(R.color.colorBackground))
+                .show()
+        }
+    }
+
     private fun updateUserList(){
         userViewModel.updateUserList()
-        setupData()
+        setupContactList()
     }
 }

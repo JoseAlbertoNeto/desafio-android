@@ -5,4 +5,5 @@
     <color name="colorUserName">#E4FFFFFF</color>
     <color name="colorAccent">#11C76F</color>
     <color name="colorDetail">#80FFFFFF</color>
+    <color name="colorError">#F44336</color>
 </resources>

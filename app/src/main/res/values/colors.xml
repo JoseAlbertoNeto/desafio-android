@@ -5,4 +5,5 @@
     <color name="colorUserName">#2B2C2F</color>
     <color name="colorAccent">#11C76F</color>
     <color name="colorDetail">#2B2C2F</color>
+    <color name="colorError">#E4C51515</color>
 </resources>
