@@ -6,6 +6,8 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.picpay.desafio.android.R
@@ -14,11 +16,13 @@ import com.picpay.desafio.android.api.Result
 import com.picpay.desafio.android.repository.FailedToGetDataException
 import com.picpay.desafio.android.repository.NoInternetConnectionException
 import com.picpay.desafio.android.view.recyclerview.UserListAdapter
+import com.picpay.desafio.android.viewmodel.User
 import com.picpay.desafio.android.viewmodel.UserViewModel
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     private lateinit var binding: ActivityMainBinding
+    private val adapter = UserListAdapter()
     private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,18 +54,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private fun setupContactList(){
         binding.progressBar.visibility = View.VISIBLE
         userViewModel.users.observe(this, {result ->
+            binding.progressBar.visibility = View.GONE
             when(result){
                 is Result.Success -> {
-                    binding.progressBar.visibility = View.GONE
-                    binding.recyclerView.layoutManager = LinearLayoutManager(this)
-                    val adapter = UserListAdapter()
-                    adapter.users = result.value!!
-                    binding.recyclerView.adapter = adapter
+                    setupRecyclerView(result.value!!)
                     showSnackBar(getString(R.string.contacts_updated), R.color.colorAccent)
                 }
                 is Result.Error -> {
-                    binding.progressBar.visibility = View.GONE
-
                     val message = when(result.exception){
                         is NoInternetConnectionException -> getString(R.string.no_internet)
                         is FailedToGetDataException -> getString(R.string.failed_get_data)
@@ -72,6 +71,14 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 }
             }
         })
+    }
+
+    private fun setupRecyclerView(result: List<User>){
+        if(binding.recyclerView.layoutManager == null){
+            binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        }
+        adapter.users = result
+        binding.recyclerView.adapter = adapter
     }
 
     private fun showSnackBar(message:String, colorId: Int){
