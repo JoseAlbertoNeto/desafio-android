@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="contacts_updated">Lista de contatos atualizada</string>
     <string name="title">Contatos</string>
     <string name="error">Ocorreu um erro. Tente novamente.</string>
     <string name="failed_get_data">Erro ao obter dados.</string>
     <string name="no_internet">Sem conexão com à internet.</string>
     <string name="retry">Tentar novamente</string>
+    <string name="update_contacts">Atualizar contatos</string>
 </resources>

@@ -1,14 +1,15 @@
 package com.picpay.desafio.android.view
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
-import android.widget.ProgressBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.picpay.desafio.android.R
+import com.picpay.desafio.android.databinding.ActivityMainBinding
 import com.picpay.desafio.android.api.Result
 import com.picpay.desafio.android.repository.FailedToGetDataException
 import com.picpay.desafio.android.repository.NoInternetConnectionException
@@ -17,46 +18,68 @@ import com.picpay.desafio.android.viewmodel.UserViewModel
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var adapter: UserListAdapter
+    private lateinit var binding: ActivityMainBinding
     private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        recyclerView = findViewById(R.id.recyclerView)
-        progressBar = findViewById(R.id.user_list_progress_bar)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding.toolbar.title = ""
+
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
         setupData()
     }
 
-    private fun setupData(){
-        progressBar.visibility = View.VISIBLE
-        userViewModel.users.observe(this, {
-            it.observe(this, { result ->
-                when(result){
-                    is Result.Success -> {
-                        progressBar.visibility = View.GONE
-                        recyclerView.layoutManager = LinearLayoutManager(this)
-                        adapter = UserListAdapter()
-                        adapter.users = result.value!!
-                        recyclerView.adapter = adapter
-                        recyclerView.visibility = View.VISIBLE
-                    }
-                    is Result.Error -> {
-                        progressBar.visibility = View.GONE
-                        recyclerView.visibility = View.GONE
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
 
-                        val message = when(result.exception){
-                            is NoInternetConnectionException -> getString(R.string.no_internet)
-                            is FailedToGetDataException -> getString(R.string.failed_get_data)
-                            else -> getString(R.string.error)
-                        }
-                        Snackbar.make(findViewById(R.id.recyclerView), message, Snackbar.LENGTH_SHORT)
-                            .setAction(R.string.retry){userViewModel.updateUserList()}
-                            .show()
-                    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                updateUserList()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun setupData(){
+        binding.progressBar.visibility = View.VISIBLE
+        userViewModel.users.observe(this, {result ->
+            when(result){
+                is Result.Success -> {
+                    binding.progressBar.visibility = View.GONE
+                    binding.recyclerView.layoutManager = LinearLayoutManager(this)
+                    val adapter = UserListAdapter()
+                    adapter.users = result.value!!
+                    binding.recyclerView.adapter = adapter
+                    Snackbar.make(findViewById(R.id.recyclerView), getString(R.string.contacts_updated), Snackbar.LENGTH_LONG)
+                        .setTextColor(getColor(R.color.colorAccent))
+                        .show()
                 }
-            })
+                is Result.Error -> {
+                    binding.progressBar.visibility = View.GONE
+
+                    val message = when(result.exception){
+                        is NoInternetConnectionException -> getString(R.string.no_internet)
+                        is FailedToGetDataException -> getString(R.string.failed_get_data)
+                        else -> getString(R.string.error)
+                    }
+
+                    Snackbar.make(findViewById(R.id.recyclerView), message, Snackbar.LENGTH_LONG)
+                        .setTextColor(getColor(R.color.design_default_color_error))
+                        .show()
+                }
+            }
         })
+    }
+
+    private fun updateUserList(){
+        userViewModel.updateUserList()
+        setupData()
     }
 }

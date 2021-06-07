@@ -5,8 +5,12 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorBackground</item>
-        <item name="colorPrimaryDark">@android:color/black</item>
+        <item name="colorPrimaryDark">@color/colorDetail</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:background">@color/colorBackground</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:textColorSecondary">@color/colorDetail</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="ScreenTitleTextView" parent="TextAppearance.AppCompat">
@@ -14,5 +18,4 @@
         <item name="android:textSize">@dimen/title</item>
         <item name="android:textStyle">bold</item>
     </style>
-
 </resources>
