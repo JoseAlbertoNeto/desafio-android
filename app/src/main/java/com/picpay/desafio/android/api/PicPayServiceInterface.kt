@@ -1,6 +1,5 @@
 package com.picpay.desafio.android.api
 
-import com.picpay.desafio.android.viewmodel.User
 import retrofit2.Response
 import retrofit2.http.GET
 

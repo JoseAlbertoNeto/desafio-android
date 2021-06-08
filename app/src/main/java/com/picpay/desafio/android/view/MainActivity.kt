@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.picpay.desafio.android.R
 import com.picpay.desafio.android.databinding.ActivityMainBinding
-import com.picpay.desafio.android.api.Result
+import com.picpay.desafio.android.repository.Result
 import com.picpay.desafio.android.repository.FailedToGetDataException
 import com.picpay.desafio.android.repository.NoInternetConnectionException
 import com.picpay.desafio.android.view.recyclerview.UserListAdapter
-import com.picpay.desafio.android.viewmodel.User
+import com.picpay.desafio.android.api.User
 import com.picpay.desafio.android.viewmodel.UserViewModel
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
@@ -59,12 +59,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                     showSnackBar(getString(R.string.contacts_updated), R.color.colorAccent)
                 }
                 is Result.Error -> {
-                    val message = when(result.exception){
-                        is NoInternetConnectionException -> getString(R.string.no_internet)
-                        is FailedToGetDataException -> getString(R.string.failed_get_data)
-                        else -> getString(R.string.error)
+                    val (message, userDbList) = when(result.exception){
+                        is NoInternetConnectionException -> Pair(getString(R.string.no_internet), result.exception.value)
+                        is FailedToGetDataException -> Pair(getString(R.string.failed_get_data), result.exception.value)
+                        else -> Pair(getString(R.string.error), null)
                     }
-
+                    if(userDbList != null)
+                        setupRecyclerView(userDbList)
                     showSnackBar(message, R.color.colorError)
                 }
             }

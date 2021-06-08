@@ -1,4 +1,4 @@
-package com.picpay.desafio.android.api
+package com.picpay.desafio.android.repository
 
 sealed class Result<out T> {
     data class Success<out R>(val value: R?): Result<R?>()
