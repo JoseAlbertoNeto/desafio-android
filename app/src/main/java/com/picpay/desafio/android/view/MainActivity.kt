@@ -50,23 +50,14 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     }
 
     private fun setupContactList(){
-        binding.progressBar.visibility = View.VISIBLE
         userViewModel.users.observe(this, {result ->
-            binding.progressBar.visibility = View.GONE
             when(result){
                 is Result.Success -> {
-                    setupRecyclerView(result.value!!)
-                    showSnackBar(getString(R.string.contacts_updated), R.color.colorAccent)
+                    if(result.value != null)
+                        setupRecyclerView(result = result.value)
                 }
                 is Result.Error -> {
-                    val (message, userDbList) = when(result.exception){
-                        is NoInternetConnectionException -> Pair(getString(R.string.no_internet), result.exception.value)
-                        is FailedToGetDataException -> Pair(getString(R.string.failed_get_data), result.exception.value)
-                        else -> Pair(getString(R.string.error), null)
-                    }
-                    if(userDbList != null)
-                        setupRecyclerView(userDbList)
-                    showSnackBar(message, R.color.colorError)
+
                 }
             }
         })
@@ -91,7 +82,24 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     }
 
     private fun updateUserList(){
+        binding.progressBar.visibility = View.VISIBLE
         userViewModel.updateUserList()
-        setupContactList()
+        userViewModel.users.observe(this, {result ->
+            binding.progressBar.visibility = View.GONE
+            when(result){
+                is Result.Success -> {
+                    setupRecyclerView(result.value!!)
+                    showSnackBar(getString(R.string.contacts_updated), R.color.colorAccent)
+                }
+                is Result.Error -> {
+                    val message = when(result.exception){
+                        is NoInternetConnectionException -> getString(R.string.no_internet)
+                        is FailedToGetDataException -> getString(R.string.failed_get_data)
+                        else -> getString(R.string.error)
+                    }
+                    showSnackBar(message, R.color.colorError)
+                }
+            }
+        })
     }
 }

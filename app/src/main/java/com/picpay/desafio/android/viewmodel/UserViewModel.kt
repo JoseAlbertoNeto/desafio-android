@@ -10,7 +10,7 @@ import com.picpay.desafio.android.repository.PicPayServiceImpl
 
 class UserViewModel(application: Application) : AndroidViewModel(application) {
     val needShowSnackBar: MutableLiveData<Boolean> by lazy {MutableLiveData(true)}
-    var users: LiveData<Result<List<User>?>> = PicPayServiceImpl.getUsers(getApplication<Application>().applicationContext)
+    var users: LiveData<Result<List<User>?>> = PicPayServiceImpl.getUsersFromDb(getApplication<Application>().applicationContext)
         private set
 
     fun updateUserList(){
