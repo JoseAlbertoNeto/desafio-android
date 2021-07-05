@@ -49,6 +49,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         }
     }
 
+    /**
+     * Load users from database (cache) to show to user, if database is empty,
+     * fetch users from webservice
+     */
     private fun setupContactList(){
         userViewModel.users.observe(this, {result ->
             when(result){
@@ -57,7 +61,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                         setupRecyclerView(result = result.value)
                 }
                 is Result.Error -> {
-
+                    updateUserList()
                 }
             }
         })

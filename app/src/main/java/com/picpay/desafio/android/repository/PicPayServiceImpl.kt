@@ -1,6 +1,5 @@
 package com.picpay.desafio.android.repository
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.google.gson.GsonBuilder
@@ -26,27 +25,11 @@ object PicPayServiceImpl {
     }
 
     /**
-     * Get users from room database
-     * @param context context for database
-     * @return livedata with all users in database
-     */
-    fun getUsersFromDb(context: Context): LiveData<Result<List<User>?>> {
-        return liveData {
-            val response = PicPayDataBaseImpl(context).userDao.getAll()
-            if(response.isEmpty()){
-                emit(Result.Error(EmptyDataBase("Empty database")))
-            } else{
-                emit(Result.Success(response))
-            }
-        }
-    }
-
-    /**
      * Get users from webservice and then add/update users in room database
-     * @param context context for database
+     * @param database room database
      * @return livedata with all users in webservice
      */
-    fun getUsers(context: Context): LiveData<Result<List<User>?>> {
+    fun getUsers(database: PicPayDataBaseImpl): LiveData<Result<List<User>?>> {
         return liveData{
             try{
                 val response = service.getUsers()
@@ -54,10 +37,10 @@ object PicPayServiceImpl {
                     val users = response.body()
                     emit(Result.Success(value = users))
                     if(users != null){
-                        val database = PicPayDataBaseImpl(context).userDao
-                        // need insert diff list and add and update users
-                        //val usersFromDb = database.getAll()
-                        database.insertAll(users)
+                        val usersInDb= database.userDao.getAll().toSet()
+                        val usersToAdd = users.minus(usersInDb)
+                        if(usersToAdd.isNotEmpty())
+                            database.userDao.insertAll(usersToAdd)
                     }
                 } else {
                     emit(Result.Error(FailedToGetDataException("Failed to get data")))
